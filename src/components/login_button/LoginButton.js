@@ -71,7 +71,7 @@ function LoginButton() {
                   padding: "10px",
                   textTransform: "capitalize",
                 }}
-                startIcon={<Icon baseClassName="fab" className="fa-linkedin-in"/>}
+                startIcon={<Icon baseClassName="fab" className="fa-linkedin-in" />}
               >
                 Login with LinkedIn
               </Button>
