@@ -1,11 +1,15 @@
 import React from "react";
+import mainTheme from "./../theme/mainTheme";
+import { ThemeProvider } from "@mui/material";
 import Header from "./../header/Header";
 
 function App() {
   return (
-    <div className="App">
-      <Header />
-    </div>
+    <ThemeProvider theme={mainTheme}>
+      <div className="App">
+        <Header />
+      </div>
+    </ThemeProvider>
   );
 }
 

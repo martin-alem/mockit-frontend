@@ -9,10 +9,10 @@ function Heading() {
         width: { xs: "100%", md: "50%" },
       }}
     >
-      <Typography variant="h1" component="div" gutterBottom>
+      <Typography variant="h1" component="div" color="primary.contrastText" gutterBottom>
         Mockit
       </Typography>
-      <Typography variant="subtitle1" gutterBottom component="div">
+      <Typography variant="subtitle1" color="primary.contrastText" gutterBottom component="div">
         The ultimate platform to practice mock coding interviews. Everything you need to get comfortable tackling any software technical and behavioral interview.
       </Typography>
     </Box>
