@@ -3,3 +3,9 @@
     height: 70vh;
     background-color: var(--color-primary);
 }
+
+.Header-logo-login{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
