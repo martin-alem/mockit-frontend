@@ -1,0 +1,12 @@
+:root{
+    --color-primary: #021E39;
+}
+
+*, *::after, *::before {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 0px;
+    margin: 0px;
+}
