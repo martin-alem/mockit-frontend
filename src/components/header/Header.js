@@ -1,19 +1,42 @@
 import React from "react";
-import "./Header.css";
 import Logo from "./../logo/Logo";
-import LoginButton from "./../login_button/LoginButton"
+import Illustration from "./../illustration/Illustration";
+import LoginButton from "./../login_button/LoginButton";
+import Heading from "./../heading/Heading";
 import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 
 function Header() {
   return (
-    <div className="Header">
+    <Box
+      sx={{
+        width: "100%",
+        backgroundColor: "primary.main",
+      }}
+    >
       <Container maxWidth="lg">
-        <div className="Header-logo-login">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Logo />
           <LoginButton />
-        </div>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: { xs: "center", md: "space-around" },
+            alignItems: { xs: "center", md: "center" },
+          }}
+        >
+          <Heading />
+          <Illustration />
+        </Box>
       </Container>
-    </div>
+    </Box>
   );
 }
 

@@ -9,8 +9,6 @@ function Logo() {
       sx={{
         height: 95,
         width: 100,
-        maxHeight: { xs: 95, md: 95 },
-        maxWidth: { xs: 100, md: 100 },
       }}
       alt="logo"
       src={logo}
