@@ -48,7 +48,7 @@ function Features() {
               <Typography variant="h6" component="h6">
                 Rich coding environment
               </Typography>
-              <Typography variant="body2" component="body2">
+              <Typography variant="body2" component="p">
                 Mockit mimics what you may encounter in a real coding interview, such as whiteboard and syntax highlighting mode
               </Typography>
             </Box>

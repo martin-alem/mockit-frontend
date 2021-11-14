@@ -6,9 +6,7 @@ import Home from "./../../pages/home/Home";
 function App() {
   return (
     <ThemeProvider theme={mainTheme}>
-      <div className="App" data-testid="app">
         <Home />
-      </div>
     </ThemeProvider>
   );
 }
