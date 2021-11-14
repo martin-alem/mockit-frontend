@@ -6,7 +6,7 @@ import Header from "./../header/Header";
 function App() {
   return (
     <ThemeProvider theme={mainTheme}>
-      <div className="App">
+      <div className="App" data-testid="app">
         <Header />
       </div>
     </ThemeProvider>
