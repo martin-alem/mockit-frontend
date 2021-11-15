@@ -8,6 +8,12 @@ import GoogleLogin from "react-google-login";
 import { Stack } from "@mui/material";
 import Icon from "@mui/material/Icon";
 
+const responseType = process.env.REACT_APP_RESPONSE_TYPE;
+const clientId = process.env.REACT_APP_CLIENT_ID;
+const redirectURI = process.env.REACT_APP_REDIRECT_URI;
+const state = process.env.REACT_APP_STATE;
+const scope = process.env.REACT_APP_SCOPE;
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -26,6 +32,10 @@ function LoginButton() {
   const handleClose = () => setOpen(false);
   const handleCredentialResponse = response => {
     console.log(response);
+  };
+  const handleLinkedLogin = () => {
+    const url = `https://www.linkedin.com/oauth/v2/authorization?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectURI}&state=${state}&scope=${scope}`;
+    window.location.assign(url);
   };
 
   return (
@@ -66,6 +76,7 @@ function LoginButton() {
                 responseType="token"
               />
               <Button
+                onClick={handleLinkedLogin}
                 variant="contained"
                 sx={{
                   padding: "10px",
