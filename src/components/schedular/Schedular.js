@@ -36,7 +36,7 @@ function Schedular() {
         Mock Interview Schedular
       </Typography>
       <FormLabel component="legend">Interview with a</FormLabel>
-      <RadioGroup aria-label="gender" name="controlled-radio-buttons-group" value={option} onChange={handleOptionChange}>
+      <RadioGroup row aria-label="gender" name="controlled-radio-buttons-group" value={option} onChange={handleOptionChange}>
         <FormControlLabel value="friend" control={<Radio />} label="Friend" />
         <FormControlLabel value="user" control={<Radio />} label="Random User" />
       </RadioGroup>
@@ -71,7 +71,7 @@ function Schedular() {
           <Box sx={{ mt: "20px" }}>
             <Typography variant="h6">Pick a role</Typography>
           </Box>
-          <RadioGroup aria-label="gender" name="controlled-radio-buttons-group" value={role} onChange={handleRoleChange}>
+          <RadioGroup row aria-label="gender" name="controlled-radio-buttons-group" value={role} onChange={handleRoleChange}>
             <FormControlLabel value="interviewer" control={<Radio />} label="Interviewer" />
             <FormControlLabel value="interviewee" control={<Radio />} label="Interviewee" />
           </RadioGroup>

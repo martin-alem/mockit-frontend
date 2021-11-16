@@ -27,9 +27,7 @@ function Admin() {
             </TabList>
           </Box>
           <TabPanel value="1">
-            <Typography variant="h5" sx={{ textAlign: "center" }}>
               <TextEditor />
-            </Typography>
           </TabPanel>
           <TabPanel value="2">
             <Typography variant="h5" sx={{ textAlign: "center" }}>
