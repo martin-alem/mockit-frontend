@@ -4,6 +4,6 @@
   box-sizing: border-box;
 }
 
-#container .ql-editor {
+.ql-editor {
   height: 400px;
 }
