@@ -21,9 +21,19 @@ function ProfileForm() {
     TypeScript: false,
   });
 
+  const [nickname, setNickname] = React.useState("");
+  const [email, setEmail] = React.useState("");
+
   const [difficulties, setDifficulties] = React.useState({ Easy: false, Medium: false, Hard: false, VeryHard: false });
 
-  const handleChange = event => {
+  const handleNicknameChange = event => {
+    setNickname(event.target.value);
+  };
+
+  const handleEmailChange = event => {
+    setEmail(event.target.value);
+  };
+  const handleLanguageChange = event => {
     setLanguages({
       ...languages,
       [event.target.name]: event.target.checked,
@@ -37,8 +47,34 @@ function ProfileForm() {
     });
   };
 
-  const { Java, CPP, CS, JavaScript, Kotlin, Python, Swift, TypeScript } = languages;
+  const { Java, CPP, CS, JavaScript, Kotlin, Python, Swift, TypeScript, Go } = languages;
   const { Easy, Medium, Hard, VeryHard } = difficulties;
+
+  const getOption = options => {
+    const selectedOption = {};
+
+    for (const key in options) {
+      if (options[key]) {
+        selectedOption[key] = options[key];
+      }
+    }
+
+    return selectedOption;
+  };
+
+  const submitProfile = event => {
+    event.preventDefault();
+    /**
+     * In the future implement a local version of the data
+     * so it will be compared against the new data before making
+     * an actual update in database
+     */
+    const selectedLanguages = getOption(languages);
+    const selectedDifficulties = getOption(difficulties);
+    const profile = { nickname, email, selectedLanguages, selectedDifficulties };
+
+    console.log(profile);
+  };
   return (
     <Box>
       <Typography variant="h4" component="h3">
@@ -49,7 +85,15 @@ function ProfileForm() {
         <Typography variant="body2">Your nickname will be visible to your interview partners.</Typography>
       </Box>
       <Box component="form" sx={{ width: "100%", mt: "20px" }} noValidate autoComplete="off">
-        <TextField id="outlined-basic" label="Nickname" variant="outlined" sx={{ width: "100%" }} />
+        <TextField
+          name="nickname"
+          value={nickname}
+          onChange={handleNicknameChange}
+          id="outlined-basic"
+          label="Nickname"
+          variant="outlined"
+          sx={{ width: "100%" }}
+        />
       </Box>
 
       <Box sx={{ mt: "20px" }}>
@@ -57,7 +101,15 @@ function ProfileForm() {
         <Typography variant="body2">We'll send interview status updates to this e-mail address.</Typography>
       </Box>
       <Box component="form" sx={{ width: "100%", mt: "20px" }} noValidate autoComplete="off">
-        <TextField id="outlined-basic" label="Email Address" variant="outlined" sx={{ width: "100%" }} />
+        <TextField
+          name="email"
+          value={email}
+          onChange={handleEmailChange}
+          id="outlined-basic"
+          label="Email Address"
+          variant="outlined"
+          sx={{ width: "100%" }}
+        />
       </Box>
 
       <Box sx={{ mt: "20px" }}>
@@ -67,32 +119,44 @@ function ProfileForm() {
       <Box component="form" sx={{ width: "100%", mt: "20px" }}>
         <Grid container spacing={3}>
           <Grid item>
-            <FormControlLabel control={<Checkbox checked={Java} onChange={handleChange} name="Java" />} label="Java" />
+            <FormControlLabel control={<Checkbox checked={Java} onChange={handleLanguageChange} name="Java" />} label="Java" />
           </Grid>
           <Grid item>
             <FormControlLabel
-              control={<Checkbox checked={JavaScript} onChange={handleChange} name="JavaScript" />}
+              control={<Checkbox checked={JavaScript} onChange={handleLanguageChange} name="JavaScript" />}
               label="JavaScript"
             />
           </Grid>
           <Grid item>
-            <FormControlLabel control={<Checkbox checked={CPP} onChange={handleChange} name="CPP" />} label="C++" />
+            <FormControlLabel control={<Checkbox checked={CPP} onChange={handleLanguageChange} name="CPP" />} label="C++" />
           </Grid>
           <Grid item>
-            <FormControlLabel control={<Checkbox checked={CS} onChange={handleChange} name="CS" />} label="C#" />
-          </Grid>
-          <Grid item>
-            <FormControlLabel control={<Checkbox checked={Kotlin} onChange={handleChange} name="Kotlin" />} label="Kotlin" />
-          </Grid>
-          <Grid item>
-            <FormControlLabel control={<Checkbox checked={Python} onChange={handleChange} name="Python" />} label="Python" />
-          </Grid>
-          <Grid item>
-            <FormControlLabel control={<Checkbox checked={Swift} onChange={handleChange} name="Swift" />} label="Swift" />
+            <FormControlLabel control={<Checkbox checked={CS} onChange={handleLanguageChange} name="CS" />} label="C#" />
           </Grid>
           <Grid item>
             <FormControlLabel
-              control={<Checkbox checked={TypeScript} onChange={handleChange} name="TypeScript" />}
+              control={<Checkbox checked={Kotlin} onChange={handleLanguageChange} name="Kotlin" />}
+              label="Kotlin"
+            />
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              control={<Checkbox checked={Python} onChange={handleLanguageChange} name="Python" />}
+              label="Python"
+            />
+          </Grid>
+          <Grid item>
+            <FormControlLabel control={<Checkbox checked={Go} onChange={handleLanguageChange} name="Go" />} label="Go" />
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              control={<Checkbox checked={Swift} onChange={handleLanguageChange} name="Swift" />}
+              label="Swift"
+            />
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              control={<Checkbox checked={TypeScript} onChange={handleLanguageChange} name="TypeScript" />}
               label="TypeScript"
             />
           </Grid>
@@ -130,7 +194,13 @@ function ProfileForm() {
           </Grid>
         </Grid>
       </Box>
-      <Button startIcon={<SaveIcon/>} sx={{ mt: "20px", backgroundColor: "secondary.main" }} disabled={false} variant="contained">
+      <Button
+        onClick={submitProfile}
+        startIcon={<SaveIcon />}
+        sx={{ mt: "20px", backgroundColor: "secondary.main" }}
+        disabled={false}
+        variant="contained"
+      >
         Save Changes
       </Button>
     </Box>
