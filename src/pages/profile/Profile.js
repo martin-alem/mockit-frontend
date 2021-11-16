@@ -9,6 +9,7 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Greeter from "./../../components/greeter/Greeter";
 import ProfileForm from "./../../components/profile_form/ProfileForm";
@@ -51,7 +52,6 @@ export default function MenuAppBar() {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Settings</MenuItem>
               <MenuItem onClick={handleClose}>Logout</MenuItem>
             </Menu>
           </div>
@@ -69,9 +69,17 @@ export default function MenuAppBar() {
                 <Tab label="Interviews" value="4" />
               </TabList>
             </Box>
-            <TabPanel value="1"></TabPanel>
-            <TabPanel value="2"><ProfileForm/></TabPanel>
-            <TabPanel value="3"><Schedular/></TabPanel>
+            <TabPanel value="1">
+              <Typography variant="h5" sx={{ textAlign: "center" }}>
+                Feature coming soon
+              </Typography>
+            </TabPanel>
+            <TabPanel value="2">
+              <ProfileForm />
+            </TabPanel>
+            <TabPanel value="3">
+              <Schedular />
+            </TabPanel>
             <TabPanel value="4"></TabPanel>
           </TabContext>
         </Box>
