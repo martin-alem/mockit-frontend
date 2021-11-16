@@ -11,6 +11,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Container from "@mui/material/Container";
 import Greeter from "./../../components/greeter/Greeter";
+import ProfileForm from "./../../components/profile_form/ProfileForm";
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -31,7 +32,7 @@ export default function MenuAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar sx={{ justifyContent: "flex-end" }}>
           <div>
             <Avatar onClick={handleMenu} alt="Martin Alemajoh" src="/static/images/avatar/1.jpg" sx={{ cursor: "pointer" }} />
@@ -69,7 +70,7 @@ export default function MenuAppBar() {
               </TabList>
             </Box>
             <TabPanel value="1">Item One</TabPanel>
-            <TabPanel value="2">Item Two</TabPanel>
+            <TabPanel value="2"><ProfileForm/></TabPanel>
             <TabPanel value="3">Item Three</TabPanel>
             <TabPanel value="4">Item Four</TabPanel>
           </TabContext>
