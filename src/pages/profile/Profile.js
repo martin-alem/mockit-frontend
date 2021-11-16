@@ -12,7 +12,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import Container from "@mui/material/Container";
 import Greeter from "./../../components/greeter/Greeter";
 import ProfileForm from "./../../components/profile_form/ProfileForm";
-
+import Schedular from "./../../components/schedular/Schedular";
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -69,10 +69,10 @@ export default function MenuAppBar() {
                 <Tab label="Interviews" value="4" />
               </TabList>
             </Box>
-            <TabPanel value="1">Item One</TabPanel>
+            <TabPanel value="1"></TabPanel>
             <TabPanel value="2"><ProfileForm/></TabPanel>
-            <TabPanel value="3">Item Three</TabPanel>
-            <TabPanel value="4">Item Four</TabPanel>
+            <TabPanel value="3"><Schedular/></TabPanel>
+            <TabPanel value="4"></TabPanel>
           </TabContext>
         </Box>
       </Container>
