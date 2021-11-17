@@ -7,6 +7,8 @@ import LoginIcon from "@mui/icons-material/Login";
 import GoogleLogin from "react-google-login";
 import { Stack } from "@mui/material";
 import Icon from "@mui/material/Icon";
+import { httpAgent } from "./../../util/util";
+import { UserContext } from "./../../context/userContext";
 
 const responseType = process.env.REACT_APP_RESPONSE_TYPE;
 const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -30,8 +32,30 @@ function LoginButton() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const userContext = React.useContext(UserContext);
   const handleCredentialResponse = response => {
-    console.log(response);
+    if (response.profileObj) {
+      const { familyName, givenName, imageUrl, email } = response.profileObj;
+      const data = { firstName: familyName, lastName: givenName, imageUrl, emailAddress: email };
+      const url = "http://localhost:4000/api/v1/google/auth";
+      const method = "POST";
+
+      httpAgent(url, method, data)
+        .then(response => {
+          response
+            .json()
+            .then(data => {
+              userContext.setLoggedInUser({ user: { ...data.user }, profile: { ...data.profile } });
+              window.location.replace("/profile");
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
   };
   const handleLinkedLogin = () => {
     const url = `https://www.linkedin.com/oauth/v2/authorization?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectURI}&state=${state}&scope=${scope}`;

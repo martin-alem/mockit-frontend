@@ -17,8 +17,6 @@ import Schedular from "./../../components/schedular/Schedular";
 import { UserContext } from "./../../context/userContext";
 
 
-
-
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -37,14 +35,14 @@ export default function MenuAppBar() {
   };
 
   const userContext = React.useContext( UserContext );
-  const { imageUrl, firstName} = userContext.loggedInUser.user;
+  const { imageUrl, firstName, lastName} = userContext.loggedInUser.user;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="sticky">
         <Toolbar sx={{ justifyContent: "flex-end" }}>
           <div>
-            <Avatar onClick={handleMenu} alt="Martin Alemajoh" src={imageUrl} sx={{ cursor: "pointer" }} />
+            <Avatar onClick={handleMenu} alt={`${firstName} ${lastName}`} src={imageUrl} sx={{ cursor: "pointer" }} />
             <Menu
               id="menu-appbar"
               anchorEl={anchorEl}
