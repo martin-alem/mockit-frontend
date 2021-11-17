@@ -13,11 +13,18 @@ import { Divider } from "@mui/material";
 import Button from "@mui/material/Button";
 import TimeIcon from "@mui/icons-material/Share";
 import { httpAgent } from "./../../util/util";
+import { UserContext } from "./../../context/userContext";
+import { v4 as randomId } from "uuid";
 
 function Schedular() {
+  const userContext = React.useContext(UserContext);
+  const { _id: userId } = userContext.loggedInUser.user;
+  const { nickName } = userContext.loggedInUser.profile;
+
   const [option, setOption] = React.useState("friend");
   const [role, setRole] = React.useState("interviewer");
-  const [questions, setQuestions] = React.useState([]);
+  const [question, setQuestion] = React.useState(""); //state to keep track of any question selected
+  const [questions, setQuestions] = React.useState([]); // state to keep track of all question pulled from database
 
   const handleOptionChange = event => {
     setOption(event.target.value);
@@ -27,10 +34,28 @@ function Schedular() {
     setRole(event.target.value);
   };
 
-  const [question, setQuestion] = React.useState("");
-
   const handleQuestionChange = event => {
     setQuestion(event.target.value);
+  };
+
+  const handleCreateLink = () => {
+    const interview = { userId, nickName, question, role, room: randomId() };
+    const url = "http://localhost:5000/api/v1/interview";
+    const method = "POST";
+    httpAgent(url, method, interview)
+      .then(response => {
+        response
+          .json()
+          .then(data => {
+            console.log(data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   React.useEffect(() => {
@@ -103,6 +128,7 @@ function Schedular() {
           </RadioGroup>
 
           <Button
+            onClick={handleCreateLink}
             startIcon={<TimeIcon />}
             sx={{ mt: "20px", backgroundColor: "secondary.main" }}
             disabled={false}
