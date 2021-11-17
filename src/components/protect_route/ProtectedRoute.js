@@ -13,6 +13,7 @@ function ProtectedRoute({ component: Component, ...rest }) {
     httpAgent(url, method, data)
       .then(response => {
         if (!response.ok) {
+          window.localStorage.removeItem("logged_in_user");
           window.location.replace("/");
         }
       })
@@ -24,7 +25,10 @@ function ProtectedRoute({ component: Component, ...rest }) {
     <Route
       {...rest}
       render={props => {
-        if (JSON.parse(localStorage.getItem("logged_in_user")) && Object.keys(JSON.parse(localStorage.getItem("logged_in_user"))).length > 0) {
+        if (
+          JSON.parse(localStorage.getItem("logged_in_user")) &&
+          Object.keys(JSON.parse(localStorage.getItem("logged_in_user"))).length > 0
+        ) {
           return <Component {...props} />;
         } else {
           return <Redirect to={{ path: "/", state: { from: props.location } }} />;
