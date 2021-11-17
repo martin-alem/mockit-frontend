@@ -14,7 +14,8 @@ import Container from "@mui/material/Container";
 import Greeter from "./../../components/greeter/Greeter";
 import ProfileForm from "./../../components/profile_form/ProfileForm";
 import Schedular from "./../../components/schedular/Schedular";
-import {UserContext} from "./../../context/userContext"
+import { UserContext } from "./../../context/userContext";
+
 
 
 

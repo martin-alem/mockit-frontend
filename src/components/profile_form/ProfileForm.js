@@ -8,10 +8,17 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
 import SaveIcon from "@mui/icons-material/Save";
 import { UserContext } from "./../../context/userContext";
+import { httpAgent } from "./../../util/util";
 
 function ProfileForm() {
   const userContext = React.useContext(UserContext);
-  const { nickName: _nickname, emailAddress: _emailAddress, languages: _languages, difficulty: _difficulty } = userContext.loggedInUser.profile;
+  const { _id } = userContext.loggedInUser.user;
+  const {
+    nickName: _nickname,
+    emailAddress: _emailAddress,
+    languages: _languages,
+    difficulty: _difficulty,
+  } = userContext.loggedInUser.profile;
   const [languages, setLanguages] = React.useState(() => {
     const languages = {
       Java: false,
@@ -26,7 +33,7 @@ function ProfileForm() {
     };
 
     _languages.forEach(language => {
-      if (languages[language]) {
+      if (language in languages) {
         languages[language] = true;
       }
     });
@@ -40,7 +47,7 @@ function ProfileForm() {
   const [difficulties, setDifficulties] = React.useState(() => {
     const difficulty = { Easy: false, Medium: false, Hard: false, VeryHard: false };
     _difficulty.forEach(difficult => {
-      if (difficulty[difficult]) {
+      if (difficult in difficulty) {
         difficulty[difficult] = true;
       }
     });
@@ -90,11 +97,35 @@ function ProfileForm() {
      * so it will be compared against the new data before making
      * an actual update in database
      */
-    const selectedLanguages = getOption(languages);
-    const selectedDifficulties = getOption(difficulties);
-    const profile = { nickname, email, selectedLanguages, selectedDifficulties };
+    const selectedLanguages = Object.keys(getOption(languages));
+    const selectedDifficulties = Object.keys(getOption(difficulties));
+    const profile = {
+      nickName: nickname,
+      emailAddress: email,
+      languages: selectedLanguages,
+      difficulty: selectedDifficulties,
+      userId: _id,
+    };
 
-    console.log(profile);
+    const url = `http://localhost:5000/api/v1/profile/${_id}`;
+    const method = "PUT";
+
+    httpAgent(url, method, profile)
+      .then(response => {
+        response
+          .json()
+          .then(data => {
+            userContext.setLoggedInUser(prevState => {
+              return { ...prevState, profile: data.profile };
+            });
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
   return (
     <Box>
