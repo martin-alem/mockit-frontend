@@ -14,6 +14,10 @@ import Container from "@mui/material/Container";
 import Greeter from "./../../components/greeter/Greeter";
 import ProfileForm from "./../../components/profile_form/ProfileForm";
 import Schedular from "./../../components/schedular/Schedular";
+import {UserContext} from "./../../context/userContext"
+
+
+
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -31,12 +35,15 @@ export default function MenuAppBar() {
     setAnchorEl(null);
   };
 
+  const userContext = React.useContext( UserContext );
+  const { imageUrl, firstName} = userContext.loggedInUser.user;
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="sticky">
         <Toolbar sx={{ justifyContent: "flex-end" }}>
           <div>
-            <Avatar onClick={handleMenu} alt="Martin Alemajoh" src="/static/images/avatar/1.jpg" sx={{ cursor: "pointer" }} />
+            <Avatar onClick={handleMenu} alt="Martin Alemajoh" src={imageUrl} sx={{ cursor: "pointer" }} />
             <Menu
               id="menu-appbar"
               anchorEl={anchorEl}
@@ -58,7 +65,7 @@ export default function MenuAppBar() {
         </Toolbar>
       </AppBar>
       <Container maxWidth="md">
-        <Greeter />
+        <Greeter firstName={firstName}/>
         <Box sx={{ width: "100%", typography: "body1" }}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

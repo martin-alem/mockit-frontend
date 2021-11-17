@@ -7,24 +7,45 @@ import Grid from "@mui/material/Grid";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
 import SaveIcon from "@mui/icons-material/Save";
+import { UserContext } from "./../../context/userContext";
 
 function ProfileForm() {
-  const [languages, setLanguages] = React.useState({
-    Java: false,
-    CPP: false,
-    CS: false,
-    Go: false,
-    JavaScript: false,
-    Kotlin: false,
-    Python: false,
-    Swift: false,
-    TypeScript: false,
+  const userContext = React.useContext(UserContext);
+  const { nickName: _nickname, emailAddress: _emailAddress, languages: _languages, difficulty: _difficulty } = userContext.loggedInUser.profile;
+  const [languages, setLanguages] = React.useState(() => {
+    const languages = {
+      Java: false,
+      CPP: false,
+      CS: false,
+      Go: false,
+      JavaScript: false,
+      Kotlin: false,
+      Python: false,
+      Swift: false,
+      TypeScript: false,
+    };
+
+    _languages.forEach(language => {
+      if (languages[language]) {
+        languages[language] = true;
+      }
+    });
+
+    return languages;
   });
 
-  const [nickname, setNickname] = React.useState("");
-  const [email, setEmail] = React.useState("");
+  const [nickname, setNickname] = React.useState(_nickname);
+  const [email, setEmail] = React.useState(_emailAddress);
 
-  const [difficulties, setDifficulties] = React.useState({ Easy: false, Medium: false, Hard: false, VeryHard: false });
+  const [difficulties, setDifficulties] = React.useState(() => {
+    const difficulty = { Easy: false, Medium: false, Hard: false, VeryHard: false };
+    _difficulty.forEach(difficult => {
+      if (difficulty[difficult]) {
+        difficulty[difficult] = true;
+      }
+    });
+    return difficulty;
+  });
 
   const handleNicknameChange = event => {
     setNickname(event.target.value);

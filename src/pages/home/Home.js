@@ -42,7 +42,7 @@ function Home(props) {
             response
               .json()
               .then(data => {
-                userContext.setLoggedInUser(data.user);
+                userContext.setLoggedInUser({ user: { ...data.user }, profile: { ...data.profile } });
                 window.location.replace("/profile");
               })
               .catch(error => {
