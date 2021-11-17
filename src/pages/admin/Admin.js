@@ -21,15 +21,25 @@ function Admin() {
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList onChange={handleChange} aria-label="lab API tabs example">
               <Tab label="Create Question" value="1" />
-              <Tab label="Server Logs" value="2" />
-              <Tab label="Server Stats" value="3" />
-              <Tab label="Interviews" value="4" />
+              <Tab label="Questions" value="2" />
+              <Tab label="Server Logs" value="3" />
+              <Tab label="Server Status" value="4" />
             </TabList>
           </Box>
           <TabPanel value="1">
-              <TextEditor />
+            <TextEditor />
           </TabPanel>
           <TabPanel value="2">
+            <Typography variant="h5" sx={{ textAlign: "center" }}>
+              Feature coming soon
+            </Typography>
+          </TabPanel>
+          <TabPanel value="3">
+            <Typography variant="h5" sx={{ textAlign: "center" }}>
+              Feature coming soon
+            </Typography>
+          </TabPanel>
+          <TabPanel value="4">
             <Typography variant="h5" sx={{ textAlign: "center" }}>
               Feature coming soon
             </Typography>

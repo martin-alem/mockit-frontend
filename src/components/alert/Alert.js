@@ -13,15 +13,17 @@ function CustomAlert(props) {
     if (reason === "clickaway") {
       return;
     }
-    setShowAlert({
-      vertical: "top",
-      horizontal: "center",
-      duration: 6000,
-      severity: "info",
-      message: "Custom message",
-      showAlert: false,
-      setShowAlert: null,
-    });
+    if (setShowAlert instanceof Function) {
+      setShowAlert({
+        vertical: "top",
+        horizontal: "center",
+        duration: 6000,
+        severity: "info",
+        message: "Custom message",
+        showAlert: false,
+        setShowAlert: null,
+      });
+    }
   };
   return (
     <Snackbar

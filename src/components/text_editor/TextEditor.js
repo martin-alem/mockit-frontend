@@ -8,6 +8,7 @@ import CustomAlert from "./../../components/alert/Alert";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import "./TextEditor.css";
+import { httpAgent } from "./../../util/util";
 
 function TextEditor() {
   const [difficulty, setDifficulty] = React.useState("");
@@ -34,54 +35,52 @@ function TextEditor() {
   const handleEditorChange = value => {
     setEditorContent(value);
   };
-  const submitQuestion = event => {
-    event.preventDefault();
+  const submitQuestion = () => {
     if (editorContent === "") {
-      setShowAlert({
-        vertical: "top",
-        horizontal: "center",
-        duration: 6000,
-        severity: "error",
-        message: "Please enter a question",
-        showAlert: true,
-        setShowAlert: setShowAlert,
-      });
+      setShowAlert(showAlertOptions("Please enter your question", "error"));
     } else if (title === "") {
-      setShowAlert({
-        vertical: "top",
-        horizontal: "center",
-        duration: 6000,
-        severity: "error",
-        message: "Please enter a title to the question",
-        showAlert: true,
-        setShowAlert: setShowAlert,
-      });
+      setShowAlert(showAlertOptions("Please provide a title to question", "error"));
     } else if (difficulty === "") {
-      setShowAlert({
-        vertical: "top",
-        horizontal: "center",
-        duration: 6000,
-        severity: "error",
-        message: "Please select a difficulty",
-        showAlert: true,
-        setShowAlert: setShowAlert,
-      });
+      setShowAlert(showAlertOptions("Please select a difficulty", "error"));
     } else {
       const question = { title, difficulty, editorContent };
-      console.log(question);
-      setShowAlert({
-        vertical: "top",
-        horizontal: "center",
-        duration: 6000,
-        severity: "success",
-        message: "Question save successfully",
-        showAlert: true,
-        setShowAlert: setShowAlert,
-      });
-      setTitle("");
-      setDifficulty("");
-      setEditorContent("");
+      const url = "http://localhost:5000/api/v1/question";
+      const method = "POST";
+      handleSubmission(url, method, question)
     }
+  };
+
+  const showAlertOptions = (message, severity) => {
+    return {
+      vertical: "top",
+      horizontal: "center",
+      duration: 6000,
+      severity,
+      message,
+      showAlert: true,
+      setShowAlert: setShowAlert,
+    };
+  };
+
+  const handleSubmission = (url, method, data) => {
+    httpAgent(url, method, data)
+      .then(response => {
+        response
+          .json()
+          .then(data => {
+            console.log(data);
+            setShowAlert(showAlertOptions("Question save successfully", "success"));
+            setTitle("");
+            setDifficulty("");
+            setEditorContent("");
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   const toolbarOptions = [
