@@ -12,10 +12,12 @@ import Select from "@mui/material/Select";
 import { Divider } from "@mui/material";
 import Button from "@mui/material/Button";
 import TimeIcon from "@mui/icons-material/Share";
+import { httpAgent } from "./../../util/util";
 
 function Schedular() {
   const [option, setOption] = React.useState("friend");
   const [role, setRole] = React.useState("interviewer");
+  const [questions, setQuestions] = React.useState([]);
 
   const handleOptionChange = event => {
     setOption(event.target.value);
@@ -30,6 +32,26 @@ function Schedular() {
   const handleQuestionChange = event => {
     setQuestion(event.target.value);
   };
+
+  React.useEffect(() => {
+    const url = "http://localhost:5000/api/v1/question";
+    const method = "GET";
+    const data = {};
+    httpAgent(url, method, data)
+      .then(response => {
+        response
+          .json()
+          .then(data => {
+            setQuestions(data.questions);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
   return (
     <Box>
       <Typography variant="h4" component="h3">
@@ -61,9 +83,13 @@ function Schedular() {
                 label="Question"
                 onChange={handleQuestionChange}
               >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                {questions.map(question => {
+                  return (
+                    <MenuItem key={question._id} value={question._id}>
+                      {question.title}
+                    </MenuItem>
+                  );
+                })}
               </Select>
             </FormControl>
           </Box>
@@ -87,7 +113,9 @@ function Schedular() {
         </>
       ) : (
         <>
-          <Typography variant="h5" sx={{textAlign: "center"}}>Feature coming soon</Typography>
+          <Typography variant="h5" sx={{ textAlign: "center" }}>
+            Feature coming soon
+          </Typography>
         </>
       )}
     </Box>
