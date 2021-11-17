@@ -1,4 +1,5 @@
 import React from "react";
+import ProtectedRoute from "../protect_route/ProtectedRoute";
 import { UserProvider } from "./../../context/userContext";
 import mainTheme from "./../theme/mainTheme";
 import { ThemeProvider } from "@mui/material";
@@ -13,7 +14,7 @@ function App() {
       <UserProvider>
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/profile" exact component={Profile} />
+          <ProtectedRoute path="/profile" exact component={Profile} />
           <Route path="/admin" exact component={Admin} />
         </Switch>
       </UserProvider>

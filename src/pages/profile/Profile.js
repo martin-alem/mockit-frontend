@@ -1,5 +1,6 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
+import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Avatar from "@mui/material/Avatar";
@@ -15,7 +16,7 @@ import Greeter from "./../../components/greeter/Greeter";
 import ProfileForm from "./../../components/profile_form/ProfileForm";
 import Schedular from "./../../components/schedular/Schedular";
 import { UserContext } from "./../../context/userContext";
-
+import { httpAgent } from "./../../util/util";
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -30,12 +31,23 @@ export default function MenuAppBar() {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleLogout = () => {
+    const url = "http://localhost:4000/api/v1/logout";
+    const method = "GET";
+
+    httpAgent(url, method, {}).then(response => {
+      if (response.ok) {
+        localStorage.removeItem("logged_in_user");
+        setAnchorEl(null);
+        window.location.replace("/");
+      } else {
+        console.error("hello");
+      }
+    });
   };
 
-  const userContext = React.useContext( UserContext );
-  const { imageUrl, firstName, lastName} = userContext.loggedInUser.user;
+  const userContext = React.useContext(UserContext);
+  const { imageUrl, firstName, lastName } = userContext.loggedInUser.user;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -56,15 +68,15 @@ export default function MenuAppBar() {
                 horizontal: "right",
               }}
               open={Boolean(anchorEl)}
-              onClose={handleClose}
+              onClose={handleLogout}
             >
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
+              <Button onClick={handleLogout}>Logout</Button>
             </Menu>
           </div>
         </Toolbar>
       </AppBar>
       <Container maxWidth="md">
-        <Greeter firstName={firstName}/>
+        <Greeter firstName={firstName} />
         <Box sx={{ width: "100%", typography: "body1" }}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
