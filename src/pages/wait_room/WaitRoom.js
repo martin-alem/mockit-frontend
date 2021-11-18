@@ -21,7 +21,7 @@ function WaitRoom(props) {
     interviewContext.setRoom(roomId);
     socket.emit("join-room", JSON.stringify({ room: roomId }));
     socket.on("friend-join", () => {
-      console.log("A friend just join the chat room");
+      window.location.replace(`/mock-interview/lobby/${roomId}`)
     });
   }, []);
   return (
@@ -48,7 +48,7 @@ function WaitRoom(props) {
                 Send this link to a friend
               </Typography>
               <Typography variant="h6" sx={{ textAlign: "center", color: "secondary.main" }}>
-                http://localhost:3000/mock-interview/{roomId}
+                http://localhost:3000/mock-interview/lobby/{roomId}
               </Typography>
             </Container>
           </CardActions>
