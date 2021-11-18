@@ -7,7 +7,8 @@ import { ThemeProvider } from "@mui/material";
 import Home from "./../../pages/home/Home";
 import Profile from "./../../pages/profile/Profile";
 import WaitRoom from "./../../pages/wait_room/WaitRoom";
-import Lobby from "./../../pages/lobby/Lobby"
+import Lobby from "./../../pages/lobby/Lobby";
+import Room from "./../../pages/room/Room";
 import Admin from "./../../pages/admin/Admin";
 import { Route, Switch } from "react-router-dom";
 
@@ -20,7 +21,8 @@ function App() {
             <Route path="/" exact component={Home} />
             <ProtectedRoute path="/profile" exact component={Profile} />
             <ProtectedRoute path="/wait_room/:roomId" exact component={WaitRoom} />
-            <Route path="/mock-interview/lobby/:roomId" exact component={Lobby}/>
+            <Route path="/mock-interview/lobby/:roomId" exact component={Lobby} />
+            <Route path="/room/:roomId" exact component={Room} />
             <Route path="/admin" exact component={Admin} />
           </Switch>
         </InterviewProvider>

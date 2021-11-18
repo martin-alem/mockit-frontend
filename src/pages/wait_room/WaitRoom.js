@@ -19,7 +19,7 @@ function WaitRoom(props) {
     // if everything goes well we connect to socket and create a room with the provided room id
     const socket = io("http://localhost:5000");
     interviewContext.setRoom(roomId);
-    socket.emit("join-room", JSON.stringify({ room: roomId }));
+    socket.emit("join-room", {roomId });
     socket.on("friend-join", () => {
       window.location.replace(`/mock-interview/lobby/${roomId}`)
     });

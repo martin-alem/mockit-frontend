@@ -8,12 +8,13 @@ import Stack from "@mui/material/Stack";
 import { io } from "socket.io-client";
 
 function Lobby(props) {
+  const { roomId } = props.match.params;
   React.useEffect(() => {
     // we have to make sure the link is valid and has not expired
     // if everything goes well we connect to socket and create a room with the provided room id
     const socket = io("http://localhost:5000");
-    const { roomId } = props.match.params;
-    socket.emit("join-room", JSON.stringify({ room: roomId }));
+
+    socket.emit("join-room", { roomId });
 
     // request for video and audio feed
     playVideoFromCamera();
@@ -48,13 +49,13 @@ function Lobby(props) {
         }}
       >
         <Box sx={{ mb: "20px", width: "500px", height: "300px" }}>
-          <video id="localVideo" autoplay />
+          <video id="localVideo" autoPlay muted />
         </Box>
         <Stack sx={{ mt: "20px", width: "200px" }}>
-          <Button variant="contained" color="secondary" sx={{ mb: "20px" }}>
+          <Button variant="contained" color="secondary" sx={{ mb: "20px" }} href={`/room/${roomId}`}>
             Join Interview
           </Button>
-          <Button variant="contained" color="error">
+          <Button variant="contained" color="error" href="/profile">
             Cancel Interview
           </Button>
         </Stack>
