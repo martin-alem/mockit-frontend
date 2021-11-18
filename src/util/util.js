@@ -32,6 +32,7 @@ export const httpAgent = async (url, method, data) => {
 
   const response = await fetch(url, init);
   if (response.status === 401) {
+    window.localStorage.removeItem("logged_in_user");
     window.location.replace("/");
   } else {
     return response;

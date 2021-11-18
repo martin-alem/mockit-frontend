@@ -47,7 +47,8 @@ function Schedular() {
         response
           .json()
           .then(data => {
-            console.log(data);
+            const { room: roomId } = data.interview;
+            window.location.assign(`/wait_room/${roomId}`);
           })
           .catch(error => {
             console.error(error);
