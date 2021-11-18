@@ -6,15 +6,23 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { io } from "socket.io-client";
+import { httpAgent } from "./../../util/util";
 
 function Lobby(props) {
   const { roomId } = props.match.params;
   React.useEffect(() => {
     // we have to make sure the link is valid and has not expired
     // if everything goes well we connect to socket and create a room with the provided room id
-    const socket = io("http://localhost:5000");
+    const url = `http://localhost:5000/${roomId}`;
+    const method = "GET";
+    httpAgent(url, method, {})
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => console.log(error));
+    // const socket = io("http://localhost:5000");
 
-    socket.emit("join-room", { roomId });
+    // socket.emit("join-room", { roomId });
 
     // request for video and audio feed
     playVideoFromCamera();

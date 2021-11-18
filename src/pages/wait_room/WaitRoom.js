@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import { InterviewContext } from "./../../context/interviewContext";
 import { io } from "socket.io-client";
+import { httpAgent } from "./../../util/util";
 
 function WaitRoom(props) {
   const interviewContext = React.useContext(InterviewContext);
@@ -17,12 +18,22 @@ function WaitRoom(props) {
   React.useEffect(() => {
     // we have to make sure the link is valid and has not expired
     // if everything goes well we connect to socket and create a room with the provided room id
-    const socket = io("http://localhost:5000");
-    interviewContext.setRoom(roomId);
-    socket.emit("join-room", {roomId });
-    socket.on("friend-join", () => {
-      window.location.replace(`/mock-interview/lobby/${roomId}`)
-    });
+    const url = `http://localhost:5000/api/v1/interview/${roomId}`;
+    const method = "GET";
+    httpAgent(url, method, {})
+      .then(response => {
+        if (!response.ok) {
+          window.location.assign("/404");
+        } else {
+          const socket = io("http://localhost:5000");
+          interviewContext.setRoom(roomId);
+          socket.emit("create-room", { roomId });
+          socket.on("friend-in-lobby", () => {
+            window.location.replace(`/mock-interview/lobby/${roomId}`);
+          });
+        }
+      })
+      .catch(error => console.log(error));
   }, []);
   return (
     <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "primary.main" }}>
