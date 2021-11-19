@@ -4,14 +4,13 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import { io } from "socket.io-client";
 import { httpAgent } from "./../../util/util";
-import MicOffIcon from "@mui/icons-material/MicOff";
-import VideocamOffIcon from "@mui/icons-material/VideocamOff";
-import VideocamIcon from "@mui/icons-material/Videocam";
-import Button from "@mui/material/Button";
-import CancelIcon from "@mui/icons-material/Cancel";
-import MicIcon from "@mui/icons-material/Mic";
-import ScreenShareIcon from "@mui/icons-material/ScreenShare";
-import FiberDvrIcon from "@mui/icons-material/FiberDvr";
+import Mic from "./../../components/icons/Mic";
+import MicOff from "./../../components/icons/MicOff";
+import MonitorShare from "./../../components/icons/MonitorShare";
+import PhoneHangup from "./../../components/icons/PhoneHangup";
+import Record from "./../../components/icons/Record";
+import VideoCam from "./../../components/icons/VideoCam";
+import VideoCamOff from "./../../components/icons/VideoCamOff";
 
 function Room(props) {
   const { roomId } = props.match.params;
@@ -60,6 +59,12 @@ function Room(props) {
 
             //listen for when other peer leaves
             socket.current.on("leave", handleLeave);
+
+            //listen for when other peer shares their screen
+            socket.current.on( "screen-shared", handleScreenShared );
+            
+            //listen for when other peer stops screen shared
+            socket.current.on( "stop-screen-share", handleStopScreenShared)
           });
         }
       })
@@ -90,7 +95,7 @@ function Room(props) {
     const desc = new RTCSessionDescription(offer.sdp);
     peerConnection.current.setRemoteDescription(desc).then(() => {
       localStream.current.getTracks().forEach(track => {
-        peerConnection.current.addTrack(track, localStream.current);
+        senders.current.push(peerConnection.current.addTrack(track, localStream.current));
       });
       return peerConnection.current
         .createAnswer()
@@ -169,6 +174,15 @@ function Room(props) {
     window.location.assign(`/mock-interview/lobby/${roomId}`);
   };
 
+  const handleScreenShared = () => {
+    setScreenShared(true);
+  };
+
+  const handleStopScreenShared = () =>
+  {
+    setScreenShared(false);
+  }
+
   const muteVideo = () => {
     localStream.current.getTracks().forEach(track => {
       if (track.kind === "video") {
@@ -208,8 +222,10 @@ function Room(props) {
         recordStream.current = stream;
         senders.current.find(sender => sender.track.kind === "video").replaceTrack(shareStream);
         setScreenShared(true);
+        socket.current.emit("screen-shared");
         shareStream.onended = () => {
           setScreenShared(false);
+          socket.current.emit("stop-screen-share");
           senders.current.find(sender => sender.track.kind === "video").replaceTrack(localStream.current.getTracks()[1]);
         };
       })
@@ -263,7 +279,7 @@ function Room(props) {
         <video id="clocalVideo" autoPlay ref={localVideo}></video>
         <video id="cremoteVideo" autoPlay ref={remoteVideo}></video>
 
-        <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mt: "40px" }}>
+        {/* <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mt: "40px" }}>
           <Button
             disabled={screenShared}
             onClick={shareScreen}
@@ -282,15 +298,6 @@ function Room(props) {
             {audioMuted ? "unmute audio" : "mute audio"}
           </Button>
           <Button
-            onClick={leaveInterview}
-            variant="contained"
-            color="error"
-            startIcon={<CancelIcon />}
-            sx={{ marginLeft: "20px", marginRight: "20px" }}
-          >
-            Leave Interview
-          </Button>
-          <Button
             onClick={muteVideo}
             variant="contained"
             startIcon={videoMuted ? <VideocamIcon /> : <VideocamOffIcon />}
@@ -307,6 +314,32 @@ function Room(props) {
               End record
             </Button>
           )}
+        </Box> */}
+        <Box
+          sx={{
+            "& > :not(style)": {
+              m: 2,
+              cursor: "pointer",
+            },
+            textAlign: "center",
+          }}
+        >
+          {!screenShared ? <MonitorShare onClick={shareScreen} sx={{ fontSize: 60 }} color="secondary" /> : null}
+
+          {audioMuted ? (
+            <MicOff onClick={muteAudio} sx={{ fontSize: 60 }} color="secondary" />
+          ) : (
+            <Mic onClick={muteAudio} sx={{ fontSize: 60 }} color="secondary" />
+          )}
+
+          <PhoneHangup onClick={leaveInterview} color="error" sx={{ fontSize: 90 }} />
+          {videoMuted ? (
+            <VideoCamOff onClick={muteVideo} sx={{ fontSize: 60 }} color="secondary" />
+          ) : (
+            <VideoCam onClick={muteVideo} sx={{ fontSize: 60 }} color="secondary" />
+          )}
+
+          {!recording ? <Record onClick={startScreenRecord} sx={{ fontSize: 60 }} color="secondary" /> : <Record onClick={stopScreenRecord} sx={{ fontSize: 60 }} color="error" />}
         </Box>
       </Container>
     </Box>

@@ -6,7 +6,7 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import HourGlass from "./../../components/icons/HourGlass";
 import { InterviewContext } from "./../../context/interviewContext";
 import { io } from "socket.io-client";
 import { httpAgent } from "./../../util/util";
@@ -50,7 +50,7 @@ function WaitRoom(props) {
               waiting for a friend to join...
             </Typography>
             <Box sx={{ color: "secondary.main", textAlign: "center" }}>
-              <HourglassEmptyIcon />
+              <HourGlass sx={{fontSize: 80}} />
             </Box>
           </CardContent>
           <CardActions>
