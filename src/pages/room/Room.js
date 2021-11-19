@@ -3,6 +3,7 @@ import "./Room.css";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import { io } from "socket.io-client";
+import { httpAgent } from "./../../util/util";
 
 function Room(props) {
   const { roomId } = props.match.params;
@@ -10,30 +11,41 @@ function Room(props) {
   const remoteVideo = React.useRef();
   const peerConnection = React.useRef();
   const socket = React.useRef();
-  const other = React.useRef();
   const localStream = React.useRef();
 
   React.useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(stream => {
-      localVideo.current.srcObject = stream;
-      localStream.current = stream;
+    // we have to make sure the link is valid and has not expired
+    // if everything goes well we connect to socket and create a room with the provided room id
+    const url = `http://localhost:5000/api/v1/interview/${roomId}`;
+    const method = "GET";
+    httpAgent(url, method, {})
+      .then(response => {
+        if (!response.ok) {
+          window.location.assign("/404");
+        } else {
+          navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(stream => {
+            localVideo.current.srcObject = stream;
+            localStream.current = stream;
 
-      socket.current = io("http://localhost:5000");
-      socket.current.emit("join-room", { roomId });
+            socket.current = io("http://localhost:5000");
+            socket.current.emit("create-room", { roomId });
 
-      socket.current.on("friend-join", room => {
-        initializeCall();
-      });
+            socket.current.on("friend-join", room => {
+              initializeCall();
+            });
 
-      //listen for offers
-      socket.current.on("sdp-offer", handleOffer);
+            //listen for offers
+            socket.current.on("sdp-offer", handleOffer);
 
-      //listen for answers
-      socket.current.on("sdp-answer", handleAnswer);
+            //listen for answers
+            socket.current.on("sdp-answer", handleAnswer);
 
-      //listen for ice-candidates
-      socket.current.on("ice-candidate", handleIceCandidate);
-    });
+            //listen for ice-candidates
+            socket.current.on("ice-candidate", handleIceCandidate);
+          });
+        }
+      })
+      .catch(error => console.log(error));
   }, []);
 
   const handleNegotiationNeededEvent = () => {
@@ -71,8 +83,8 @@ function Room(props) {
           const payload = {
             roomId: roomId,
             sdp: peerConnection.current.localDescription,
-            };
-            
+          };
+
           socket.current.emit("sdp-answer", payload);
         });
     });
@@ -131,7 +143,7 @@ function Room(props) {
   };
 
   return (
-    <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "primary.main" }}>
+    <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "black" }}>
       <Container maxWidth="xl" sx={{ width: "100%", height: "100vh", position: "relative" }}>
         <video id="clocalVideo" autoPlay ref={localVideo} muted></video>
         <video id="cremoteVideo" autoPlay ref={remoteVideo} muted></video>
