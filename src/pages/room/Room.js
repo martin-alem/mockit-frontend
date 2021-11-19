@@ -41,7 +41,7 @@ function Room(props) {
   React.useEffect(() => {
     // we have to make sure the link is valid and has not expired
     // if everything goes well we connect to socket and create a room with the provided room id
-    const url = `http://localhost:5000/api/v1/interview/${roomId}`;
+    const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/interview/${roomId}`;
     const method = "GET";
     httpAgent(url, method, {})
       .then(response => {
@@ -52,7 +52,7 @@ function Room(props) {
             localVideo.current.srcObject = stream;
             localStream.current = stream;
 
-            socket.current = io("http://localhost:5000");
+            socket.current = io(`${process.env.REACT_APP_DOMAIN_MAIN}`);
             socket.current.emit("create-room", { roomId });
 
             socket.current.on("friend-join", room => {

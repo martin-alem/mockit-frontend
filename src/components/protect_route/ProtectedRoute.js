@@ -7,7 +7,7 @@ function ProtectedRoute({ component: Component, ...rest }) {
   const userContext = React.useContext(UserContext);
   React.useEffect(() => {
     const { _id } = userContext.loggedInUser.user || "";
-    const url = `http://localhost:5000/api/v1/user/${_id}`;
+    const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/user/${_id}`;
     const method = "GET";
     const data = {};
     httpAgent(url, method, data)

@@ -37,7 +37,7 @@ function LoginButton() {
     if (response.profileObj) {
       const { familyName, givenName, imageUrl, email } = response.profileObj;
       const data = { firstName: familyName, lastName: givenName, imageUrl, emailAddress: email };
-      const url = "http://localhost:4000/api/v1/google/auth";
+      const url = `${process.env.REACT_APP_DOMAIN_AUTH}/api/v1/linkedin/auth`;
       const method = "POST";
 
       httpAgent(url, method, data)

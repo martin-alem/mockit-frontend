@@ -44,7 +44,7 @@ function TextEditor() {
       setShowAlert(showAlertOptions("Please select a difficulty", "error"));
     } else {
       const question = { title, difficulty, editorContent };
-      const url = "http://localhost:5000/api/v1/question";
+      const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/question`;
       const method = "POST";
       handleSubmission(url, method, question)
     }

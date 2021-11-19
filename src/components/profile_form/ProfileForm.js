@@ -107,7 +107,7 @@ function ProfileForm() {
       userId: _id,
     };
 
-    const url = `http://localhost:5000/api/v1/profile/${_id}`;
+    const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/profile/${_id}`;
     const method = "PUT";
 
     httpAgent(url, method, profile)

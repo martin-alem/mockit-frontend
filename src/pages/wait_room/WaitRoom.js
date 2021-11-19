@@ -18,14 +18,14 @@ function WaitRoom(props) {
   React.useEffect(() => {
     // we have to make sure the link is valid and has not expired
     // if everything goes well we connect to socket and create a room with the provided room id
-    const url = `http://localhost:5000/api/v1/interview/${roomId}`;
+    const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/interview/${roomId}`;
     const method = "GET";
     httpAgent(url, method, {})
       .then(response => {
         if (!response.ok) {
           window.location.assign("/404");
         } else {
-          const socket = io("http://localhost:5000");
+          const socket = io(`${process.env.REACT_APP_DOMAIN_MAIN}`);
           interviewContext.setRoom(roomId);
           socket.emit("create-room", { roomId });
           socket.on("friend-in-lobby", () => {
@@ -50,7 +50,7 @@ function WaitRoom(props) {
               waiting for a friend to join...
             </Typography>
             <Box sx={{ color: "secondary.main", textAlign: "center" }}>
-              <HourGlass sx={{fontSize: 80}} />
+              <HourGlass sx={{ fontSize: 80 }} />
             </Box>
           </CardContent>
           <CardActions>
@@ -59,7 +59,7 @@ function WaitRoom(props) {
                 Send this link to a friend
               </Typography>
               <Typography variant="h6" sx={{ textAlign: "center", color: "secondary.main" }}>
-                http://localhost:3000/mock-interview/lobby/{roomId}
+                ${process.env.REACT_APP_DOMAIN}/mock-interview/lobby/{roomId}
               </Typography>
             </Container>
           </CardActions>

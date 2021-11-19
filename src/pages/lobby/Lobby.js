@@ -36,14 +36,14 @@ function Lobby(props) {
   React.useEffect(() => {
     // we have to make sure the link is valid and has not expired
     // if everything goes well we connect to socket and create a room with the provided room id
-    const url = `http://localhost:5000/api/v1/interview/${roomId}`;
+    const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/interview/${roomId}`;
     const method = "GET";
     httpAgent(url, method, {})
       .then(response => {
         if (!response.ok) {
           window.location.assign("/404");
         } else {
-          const socket = io("http://localhost:5000");
+          const socket = io(`${process.env.REACT_APP_DOMAIN_MAIN}`);
           socket.emit("create-room", { roomId });
           playLocalVideo();
           getConnectedDevices("videoinput", setVideoCameras);

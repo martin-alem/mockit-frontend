@@ -33,7 +33,7 @@ function Home(props) {
 
   React.useEffect(() => {
     if (Object.keys(params).length > 0 && params["code"] && params["state"]) {
-      const url = "http://localhost:4000/api/v1/linkedin/auth";
+      const url = `${process.env.REACT_APP_DOMAIN_AUTH}/api/v1/linkedin/auth`;
       const method = "POST";
       const body = params;
       httpAgent(url, method, body)

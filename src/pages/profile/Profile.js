@@ -32,7 +32,7 @@ export default function MenuAppBar() {
   };
 
   const handleLogout = () => {
-    const url = "http://localhost:4000/api/v1/logout";
+    const url = `${process.env.REACT_APP_DOMAIN_AUTH}/api/v1/logout`;
     const method = "GET";
 
     httpAgent(url, method, {}).then(response => {
