@@ -21,9 +21,12 @@ function Room(props) {
   const socket = React.useRef();
   const localStream = React.useRef();
   const senders = React.useRef([]);
+  const mediaRecorder = React.useRef(null);
+  const recordStream = React.useRef(null);
   const [videoMuted, setVideoMuted] = React.useState(false);
   const [audioMuted, setAudioMuted] = React.useState(false);
   const [screenShared, setScreenShared] = React.useState(false);
+  const [recording, setRecording] = React.useState(false);
 
   React.useEffect(() => {
     // we have to make sure the link is valid and has not expired
@@ -201,15 +204,57 @@ function Room(props) {
     navigator.mediaDevices
       .getDisplayMedia(constraints)
       .then(stream => {
-        const streamTrack = stream.getTracks()[0];
-        senders.current.find(sender => sender.track.kind === "video").replaceTrack(streamTrack);
+        const shareStream = stream.getTracks()[0];
+        recordStream.current = stream;
+        senders.current.find(sender => sender.track.kind === "video").replaceTrack(shareStream);
         setScreenShared(true);
-        streamTrack.onended = () => {
+        shareStream.onended = () => {
           setScreenShared(false);
           senders.current.find(sender => sender.track.kind === "video").replaceTrack(localStream.current.getTracks()[1]);
         };
       })
       .catch(error => console.log(error));
+  };
+
+  const download = recordedChunks => {
+    const blob = new Blob(recordedChunks, {
+      type: "video/webm",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    a.href = url;
+    a.download = "test.mp4";
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const handleDataAvailable = event => {
+    const recordedChunks = [];
+    if (event.data.size > 0) {
+      recordedChunks.push(event.data);
+      download(recordedChunks);
+    }
+  };
+
+  const startScreenRecord = () => {
+    if (recordStream.current) {
+      const stream = recordStream.current;
+      const options = { mimeType: "video/webm; codecs=vp9" };
+      mediaRecorder.current = new MediaRecorder(stream, options);
+
+      mediaRecorder.current.ondataavailable = handleDataAvailable;
+      mediaRecorder.current.start();
+      setRecording(true);
+    } else {
+      console.log("You can only record streams that you sharing");
+    }
+  };
+
+  const stopScreenRecord = () => {
+    mediaRecorder.current.stop();
+    setRecording(false);
   };
 
   return (
@@ -253,9 +298,15 @@ function Room(props) {
           >
             {videoMuted ? "unmute video" : "mute video"}
           </Button>
-          <Button variant="contained" color="secondary" startIcon={<FiberDvrIcon />}>
-            Record screen
-          </Button>
+          {!recording ? (
+            <Button onClick={startScreenRecord} variant="contained" color="secondary" startIcon={<FiberDvrIcon />}>
+              Record screen
+            </Button>
+          ) : (
+            <Button onClick={stopScreenRecord} variant="contained" color="error" startIcon={<FiberDvrIcon />}>
+              End record
+            </Button>
+          )}
         </Box>
       </Container>
     </Box>
