@@ -59,7 +59,7 @@ function WaitRoom(props) {
                 Send this link to a friend
               </Typography>
               <Typography variant="h6" sx={{ textAlign: "center", color: "secondary.main" }}>
-                ${process.env.REACT_APP_DOMAIN}/mock-interview/lobby/{roomId}
+                {process.env.REACT_APP_DOMAIN}/mock-interview/lobby/{roomId}
               </Typography>
             </Container>
           </CardActions>
