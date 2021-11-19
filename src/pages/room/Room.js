@@ -10,6 +10,8 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import Button from "@mui/material/Button";
 import CancelIcon from "@mui/icons-material/Cancel";
 import MicIcon from "@mui/icons-material/Mic";
+import ScreenShareIcon from "@mui/icons-material/ScreenShare";
+import FiberDvrIcon from "@mui/icons-material/FiberDvr";
 
 function Room(props) {
   const { roomId } = props.match.params;
@@ -18,8 +20,10 @@ function Room(props) {
   const peerConnection = React.useRef();
   const socket = React.useRef();
   const localStream = React.useRef();
+  const senders = React.useRef([]);
   const [videoMuted, setVideoMuted] = React.useState(false);
   const [audioMuted, setAudioMuted] = React.useState(false);
+  const [screenShared, setScreenShared] = React.useState(false);
 
   React.useEffect(() => {
     // we have to make sure the link is valid and has not expired
@@ -149,7 +153,7 @@ function Room(props) {
   const initializeCall = () => {
     peerConnection.current = createPeerConnection();
     localStream.current.getTracks().forEach(track => {
-      peerConnection.current.addTrack(track, localStream.current);
+      senders.current.push(peerConnection.current.addTrack(track, localStream.current));
     });
   };
 
@@ -182,13 +186,54 @@ function Room(props) {
     });
   };
 
+  const shareScreen = () => {
+    const constraints = {
+      video: {
+        cursor: "always",
+      },
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        sampleRate: 44100,
+      },
+    };
+
+    navigator.mediaDevices
+      .getDisplayMedia(constraints)
+      .then(stream => {
+        const streamTrack = stream.getTracks()[0];
+        senders.current.find(sender => sender.track.kind === "video").replaceTrack(streamTrack);
+        setScreenShared(true);
+        streamTrack.onended = () => {
+          setScreenShared(false);
+          senders.current.find(sender => sender.track.kind === "video").replaceTrack(localStream.current.getTracks()[1]);
+        };
+      })
+      .catch(error => console.log(error));
+  };
+
   return (
     <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "black" }}>
       <Container maxWidth="xl" sx={{ width: "100%", height: "100vh", position: "relative" }}>
         <video id="clocalVideo" autoPlay ref={localVideo}></video>
         <video id="cremoteVideo" autoPlay ref={remoteVideo}></video>
+
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mt: "40px" }}>
-          <Button onClick={muteAudio} variant="contained" startIcon={audioMuted ? <MicIcon /> : <MicOffIcon />}>
+          <Button
+            disabled={screenShared}
+            onClick={shareScreen}
+            variant="contained"
+            color="secondary"
+            startIcon={<ScreenShareIcon />}
+          >
+            share screen
+          </Button>
+          <Button
+            onClick={muteAudio}
+            variant="contained"
+            startIcon={audioMuted ? <MicIcon /> : <MicOffIcon />}
+            sx={{ marginLeft: "20px" }}
+          >
             {audioMuted ? "unmute audio" : "mute audio"}
           </Button>
           <Button
@@ -200,8 +245,16 @@ function Room(props) {
           >
             Leave Interview
           </Button>
-          <Button onClick={muteVideo} variant="contained" startIcon={videoMuted ? <VideocamIcon /> : <VideocamOffIcon />}>
+          <Button
+            onClick={muteVideo}
+            variant="contained"
+            startIcon={videoMuted ? <VideocamIcon /> : <VideocamOffIcon />}
+            sx={{ marginRight: "20px" }}
+          >
             {videoMuted ? "unmute video" : "mute video"}
+          </Button>
+          <Button variant="contained" color="secondary" startIcon={<FiberDvrIcon />}>
+            Record screen
           </Button>
         </Box>
       </Container>
