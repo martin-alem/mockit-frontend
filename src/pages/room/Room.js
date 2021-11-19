@@ -4,6 +4,12 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import { io } from "socket.io-client";
 import { httpAgent } from "./../../util/util";
+import MicOffIcon from "@mui/icons-material/MicOff";
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import Button from "@mui/material/Button";
+import CancelIcon from "@mui/icons-material/Cancel";
+import MicIcon from "@mui/icons-material/Mic";
 
 function Room(props) {
   const { roomId } = props.match.params;
@@ -12,6 +18,8 @@ function Room(props) {
   const peerConnection = React.useRef();
   const socket = React.useRef();
   const localStream = React.useRef();
+  const [videoMuted, setVideoMuted] = React.useState(false);
+  const [audioMuted, setAudioMuted] = React.useState(false);
 
   React.useEffect(() => {
     // we have to make sure the link is valid and has not expired
@@ -42,6 +50,9 @@ function Room(props) {
 
             //listen for ice-candidates
             socket.current.on("ice-candidate", handleIceCandidate);
+
+            //listen for when other peer leaves
+            socket.current.on("leave", handleLeave);
           });
         }
       })
@@ -142,11 +153,57 @@ function Room(props) {
     });
   };
 
+  const handleLeave = () => {
+    remoteVideo.current.srcObject = null;
+  };
+
+  const leaveInterview = () => {
+    socket.current.emit("leave");
+    window.location.assign(`/mock-interview/lobby/${roomId}`);
+  };
+
+  const muteVideo = () => {
+    localStream.current.getTracks().forEach(track => {
+      if (track.kind === "video") {
+        const trackState = !track.enabled;
+        track.enabled = trackState;
+        setVideoMuted(!trackState);
+      }
+    });
+  };
+
+  const muteAudio = () => {
+    localStream.current.getTracks().forEach(track => {
+      if (track.kind === "audio") {
+        const trackState = !track.enabled;
+        track.enabled = trackState;
+        setAudioMuted(!trackState);
+      }
+    });
+  };
+
   return (
     <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "black" }}>
       <Container maxWidth="xl" sx={{ width: "100%", height: "100vh", position: "relative" }}>
-        <video id="clocalVideo" autoPlay ref={localVideo} muted></video>
-        <video id="cremoteVideo" autoPlay ref={remoteVideo} muted></video>
+        <video id="clocalVideo" autoPlay ref={localVideo}></video>
+        <video id="cremoteVideo" autoPlay ref={remoteVideo}></video>
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mt: "40px" }}>
+          <Button onClick={muteAudio} variant="contained" startIcon={audioMuted ? <MicIcon /> : <MicOffIcon />}>
+            {audioMuted ? "unmute audio" : "mute audio"}
+          </Button>
+          <Button
+            onClick={leaveInterview}
+            variant="contained"
+            color="error"
+            startIcon={<CancelIcon />}
+            sx={{ marginLeft: "20px", marginRight: "20px" }}
+          >
+            Leave Interview
+          </Button>
+          <Button onClick={muteVideo} variant="contained" startIcon={videoMuted ? <VideocamIcon /> : <VideocamOffIcon />}>
+            {videoMuted ? "unmute video" : "mute video"}
+          </Button>
+        </Box>
       </Container>
     </Box>
   );
