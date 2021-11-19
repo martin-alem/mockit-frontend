@@ -11,6 +11,7 @@ import PhoneHangup from "./../../components/icons/PhoneHangup";
 import Record from "./../../components/icons/Record";
 import VideoCam from "./../../components/icons/VideoCam";
 import VideoCamOff from "./../../components/icons/VideoCamOff";
+import CustomAlert from "./../../components/alert/Alert";
 
 function Room(props) {
   const { roomId } = props.match.params;
@@ -26,6 +27,16 @@ function Room(props) {
   const [audioMuted, setAudioMuted] = React.useState(false);
   const [screenShared, setScreenShared] = React.useState(false);
   const [recording, setRecording] = React.useState(false);
+
+  const [showAlert, setShowAlert] = React.useState({
+    vertical: "top",
+    horizontal: "center",
+    duration: 6000,
+    severity: "info",
+    message: "Custom message",
+    showAlert: false,
+    setShowAlert: null,
+  });
 
   React.useEffect(() => {
     // we have to make sure the link is valid and has not expired
@@ -61,16 +72,27 @@ function Room(props) {
             socket.current.on("leave", handleLeave);
 
             //listen for when other peer shares their screen
-            socket.current.on( "screen-shared", handleScreenShared );
-            
+            socket.current.on("screen-shared", handleScreenShared);
+
             //listen for when other peer stops screen shared
-            socket.current.on( "stop-screen-share", handleStopScreenShared)
+            socket.current.on("stop-screen-share", handleStopScreenShared);
           });
         }
       })
       .catch(error => console.log(error));
   }, []);
 
+  const showAlertOptions = (message, severity) => {
+    return {
+      vertical: "top",
+      horizontal: "center",
+      duration: 6000,
+      severity,
+      message,
+      showAlert: true,
+      setShowAlert: setShowAlert,
+    };
+  };
   const handleNegotiationNeededEvent = () => {
     peerConnection.current
       .createOffer()
@@ -167,6 +189,7 @@ function Room(props) {
 
   const handleLeave = () => {
     remoteVideo.current.srcObject = null;
+    setShowAlert(showAlertOptions("Your peer was disconnected", "info"));
   };
 
   const leaveInterview = () => {
@@ -176,14 +199,15 @@ function Room(props) {
 
   const handleScreenShared = () => {
     setScreenShared(true);
+    setShowAlert(showAlertOptions("Your peer is sharing their screen", "info"));
   };
 
-  const handleStopScreenShared = () =>
-  {
+  const handleStopScreenShared = () => {
     setScreenShared(false);
-  }
+    setShowAlert(showAlertOptions("Your peer stop sharing their screen", "info"));
+  };
 
-  const muteVideo = () => {
+  const toggleVideo = () => {
     localStream.current.getTracks().forEach(track => {
       if (track.kind === "video") {
         const trackState = !track.enabled;
@@ -193,7 +217,7 @@ function Room(props) {
     });
   };
 
-  const muteAudio = () => {
+  const toggleAudio = () => {
     localStream.current.getTracks().forEach(track => {
       if (track.kind === "audio") {
         const trackState = !track.enabled;
@@ -229,7 +253,12 @@ function Room(props) {
           senders.current.find(sender => sender.track.kind === "video").replaceTrack(localStream.current.getTracks()[1]);
         };
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        console.log(error);
+        if (error.name !== "NotAllowedError") {
+          setShowAlert(showAlertOptions("You need an active peer to share your screen with", "info"));
+        }
+      });
   };
 
   const download = recordedChunks => {
@@ -264,7 +293,7 @@ function Room(props) {
       mediaRecorder.current.start();
       setRecording(true);
     } else {
-      console.log("You can only record streams that you sharing");
+      setShowAlert(showAlertOptions("Your can't record unless your a actively sharing your screen", "warning"));
     }
   };
 
@@ -278,43 +307,6 @@ function Room(props) {
       <Container maxWidth="xl" sx={{ width: "100%", height: "100vh", position: "relative" }}>
         <video id="clocalVideo" autoPlay ref={localVideo}></video>
         <video id="cremoteVideo" autoPlay ref={remoteVideo}></video>
-
-        {/* <Box sx={{ width: "100%", display: "flex", justifyContent: "center", mt: "40px" }}>
-          <Button
-            disabled={screenShared}
-            onClick={shareScreen}
-            variant="contained"
-            color="secondary"
-            startIcon={<ScreenShareIcon />}
-          >
-            share screen
-          </Button>
-          <Button
-            onClick={muteAudio}
-            variant="contained"
-            startIcon={audioMuted ? <MicIcon /> : <MicOffIcon />}
-            sx={{ marginLeft: "20px" }}
-          >
-            {audioMuted ? "unmute audio" : "mute audio"}
-          </Button>
-          <Button
-            onClick={muteVideo}
-            variant="contained"
-            startIcon={videoMuted ? <VideocamIcon /> : <VideocamOffIcon />}
-            sx={{ marginRight: "20px" }}
-          >
-            {videoMuted ? "unmute video" : "mute video"}
-          </Button>
-          {!recording ? (
-            <Button onClick={startScreenRecord} variant="contained" color="secondary" startIcon={<FiberDvrIcon />}>
-              Record screen
-            </Button>
-          ) : (
-            <Button onClick={stopScreenRecord} variant="contained" color="error" startIcon={<FiberDvrIcon />}>
-              End record
-            </Button>
-          )}
-        </Box> */}
         <Box
           sx={{
             "& > :not(style)": {
@@ -324,24 +316,29 @@ function Room(props) {
             textAlign: "center",
           }}
         >
-          {!screenShared ? <MonitorShare onClick={shareScreen} sx={{ fontSize: 60 }} color="secondary" /> : null}
+          {!screenShared ? <MonitorShare onClick={shareScreen} sx={{ fontSize: 50 }} color="secondary" /> : null}
 
           {audioMuted ? (
-            <MicOff onClick={muteAudio} sx={{ fontSize: 60 }} color="secondary" />
+            <MicOff onClick={toggleAudio} sx={{ fontSize: 50 }} color="secondary" />
           ) : (
-            <Mic onClick={muteAudio} sx={{ fontSize: 60 }} color="secondary" />
+            <Mic onClick={toggleAudio} sx={{ fontSize: 50 }} color="secondary" />
           )}
 
           <PhoneHangup onClick={leaveInterview} color="error" sx={{ fontSize: 90 }} />
           {videoMuted ? (
-            <VideoCamOff onClick={muteVideo} sx={{ fontSize: 60 }} color="secondary" />
+            <VideoCamOff onClick={toggleVideo} sx={{ fontSize: 50 }} color="secondary" />
           ) : (
-            <VideoCam onClick={muteVideo} sx={{ fontSize: 60 }} color="secondary" />
+            <VideoCam onClick={toggleVideo} sx={{ fontSize: 50 }} color="secondary" />
           )}
 
-          {!recording ? <Record onClick={startScreenRecord} sx={{ fontSize: 60 }} color="secondary" /> : <Record onClick={stopScreenRecord} sx={{ fontSize: 60 }} color="error" />}
+          {!recording ? (
+            <Record onClick={startScreenRecord} sx={{ fontSize: 50 }} color="secondary" />
+          ) : (
+            <Record onClick={stopScreenRecord} sx={{ fontSize: 50 }} color="error" />
+          )}
         </Box>
       </Container>
+      <CustomAlert options={showAlert} />
     </Box>
   );
 }
