@@ -20,7 +20,7 @@ function ProtectedRoute({ component: Component, ...rest }) {
       .catch(error => {
         console.error(error);
       });
-  }, [rest.path]);
+  });
   return (
     <Route
       {...rest}

@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Avatar from "@mui/material/Avatar";
-import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";

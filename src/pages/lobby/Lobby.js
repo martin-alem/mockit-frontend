@@ -51,7 +51,7 @@ function Lobby(props) {
         }
       })
       .catch(error => console.log(error));
-  }, []);
+  });
 
   const getConnectedDevices = (type, callback) => {
     navigator.mediaDevices.enumerateDevices().then(devices => {

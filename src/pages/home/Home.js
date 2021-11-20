@@ -28,6 +28,7 @@ function Home(props) {
 
     setOpen(false);
   };
+
   const params = extractSearchParams(props.location.search);
   const userContext = React.useContext(UserContext);
 
@@ -38,6 +39,7 @@ function Home(props) {
       const body = params;
       httpAgent(url, method, body)
         .then(response => {
+          console.log(response);
           if (response.ok) {
             response
               .json()
@@ -58,6 +60,7 @@ function Home(props) {
     } else if (Object.keys(params).length > 0 && params["error"]) {
       handleClick();
     }
+    // eslint-disable-next-line
   }, []);
   return (
     <>

@@ -34,7 +34,7 @@ function WaitRoom(props) {
         }
       })
       .catch(error => console.log(error));
-  }, []);
+  });
   return (
     <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "primary.main" }}>
       <Box>

@@ -80,7 +80,7 @@ function Room(props) {
         }
       })
       .catch(error => console.log(error));
-  }, []);
+  });
 
   const showAlertOptions = (message, severity) => {
     return {
