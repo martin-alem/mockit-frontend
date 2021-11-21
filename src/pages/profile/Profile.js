@@ -16,6 +16,7 @@ import ProfileForm from "./../../components/profile_form/ProfileForm";
 import Schedular from "./../../components/schedular/Schedular";
 import { UserContext } from "./../../context/userContext";
 import { httpAgent } from "./../../util/util";
+import Question from "./../../components/question/Question"
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -87,9 +88,7 @@ export default function MenuAppBar() {
               </TabList>
             </Box>
             <TabPanel value="1">
-              <Typography variant="h5" sx={{ textAlign: "center" }}>
-                Feature coming soon
-              </Typography>
+              <Typography variant="h5" sx={{ textAlign: "center" }}></Typography>
             </TabPanel>
             <TabPanel value="2">
               <ProfileForm />
@@ -97,7 +96,9 @@ export default function MenuAppBar() {
             <TabPanel value="3">
               <Schedular />
             </TabPanel>
-            <TabPanel value="4"></TabPanel>
+            <TabPanel value="4">
+              <Question question="Coding question"/>
+            </TabPanel>
           </TabContext>
         </Box>
       </Container>

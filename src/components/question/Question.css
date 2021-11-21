@@ -1,0 +1,17 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+.ql-editor {
+  height: 400px;
+}
+
+span.ql-formats {
+  visibility: hidden !important;
+}
+
+.ql-toolbar.ql-snow{
+    background-color: #021E39 !important;
+}
