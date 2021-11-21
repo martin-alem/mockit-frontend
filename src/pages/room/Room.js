@@ -407,6 +407,7 @@ function Room(props) {
         recordStream.current = stream;
         const sender = senders.current.find(s => s.track.kind === "video");
         await sender.replaceTrack(shareStream);
+        console.log(sender);
         setScreenShared(true);
         socket.current.emit("screen-shared");
         shareStream.onended = () => {
@@ -517,7 +518,7 @@ function Room(props) {
           )}
         </Box>
         <Alert variant="filled" severity="info">
-          {connectionState === "" ? "Waiting for a peer to initialize connection": connectionState}
+          {connectionState === "" ? "Waiting for a peer to initialize connection" : connectionState}
         </Alert>
       </Container>
       <CustomAlert options={showAlert} />
