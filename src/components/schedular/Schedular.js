@@ -39,7 +39,7 @@ function Schedular() {
   };
 
   const handleCreateLink = () => {
-    const interview = { userId, nickName, question, role, room: randomId() };
+    const interview = { userId, nickName, question, role, participants: 1, room: randomId() };
     const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/interview`;
     const method = "POST";
     httpAgent(url, method, interview)

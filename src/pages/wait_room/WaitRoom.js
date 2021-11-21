@@ -16,11 +16,13 @@ function WaitRoom(props) {
   const { roomId } = props.match.params;
 
   React.useEffect(() => {
-    const identifier = document.cookie.split(";")[1]?.split("=");
-    const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/interview/${roomId}`;
-    const method = "GET";
-    httpAgent(url, method, {})
-      .then(response => {
+    const handleAsync = async () => {
+      const identifier = document.cookie.split(";")[1]?.split("=");
+      const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/interview/${roomId}`;
+      const method = "GET";
+
+      try {
+        const response = await httpAgent(url, method, {});
         if (!response.ok) {
           window.location.assign("/404");
         } else {
@@ -29,13 +31,31 @@ function WaitRoom(props) {
           if (identifier !== undefined) {
             socket.emit("create-room", { roomId });
             socket.on("friend-in-lobby", () => {
+              // await updateParticipants(identifier);
               window.location.replace(`/mock-interview/lobby/${roomId}`);
             });
           }
         }
-      })
-      .catch(error => console.log(error));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    handleAsync();
   });
+
+  // const updateParticipants = async identifier => {
+  //   const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/interview/${identifier}`;
+  //   const method = "PUT";
+  //   const body = { participants: 2 };
+  //   const response = await httpAgent(url, method, body);
+  //   if (response.ok) {
+  //     const data = await response.json();
+  //     console.log(data);
+  //   } else {
+  //     console.error(response);
+  //   }
+  // };
   return (
     <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "primary.main" }}>
       <Box>
