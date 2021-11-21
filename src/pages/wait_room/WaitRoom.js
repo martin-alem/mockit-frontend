@@ -16,8 +16,7 @@ function WaitRoom(props) {
   const { roomId } = props.match.params;
 
   React.useEffect(() => {
-    // we have to make sure the link is valid and has not expired
-    // if everything goes well we connect to socket and create a room with the provided room id
+    const identifier = document.cookie.split(";")[1]?.split("=");
     const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/interview/${roomId}`;
     const method = "GET";
     httpAgent(url, method, {})
@@ -27,10 +26,12 @@ function WaitRoom(props) {
         } else {
           const socket = io(`${process.env.REACT_APP_DOMAIN_MAIN}`);
           interviewContext.setRoom(roomId);
-          socket.emit("create-room", { roomId });
-          socket.on("friend-in-lobby", () => {
-            window.location.replace(`/mock-interview/lobby/${roomId}`);
-          });
+          if (identifier !== undefined) {
+            socket.emit("create-room", { roomId });
+            socket.on("friend-in-lobby", () => {
+              window.location.replace(`/mock-interview/lobby/${roomId}`);
+            });
+          }
         }
       })
       .catch(error => console.log(error));

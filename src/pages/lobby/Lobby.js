@@ -34,8 +34,6 @@ function Lobby(props) {
   const localVideo = React.useRef();
 
   React.useEffect(() => {
-    // we have to make sure the link is valid and has not expired
-    // if everything goes well we connect to socket and create a room with the provided room id
     const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/interview/${roomId}`;
     const method = "GET";
     httpAgent(url, method, {})
@@ -44,14 +42,15 @@ function Lobby(props) {
           window.location.assign("/404");
         } else {
           const socket = io(`${process.env.REACT_APP_DOMAIN_MAIN}`);
-          socket.emit("create-room", { roomId });
+          socket.emit("join-room", { roomId });
           playLocalVideo();
           getConnectedDevices("videoinput", setVideoCameras);
           getConnectedDevices("audioinput", setMicrophones);
         }
       })
       .catch(error => console.log(error));
-  });
+    // eslint-disable-next-line
+  }, []);
 
   const getConnectedDevices = (type, callback) => {
     navigator.mediaDevices.enumerateDevices().then(devices => {
