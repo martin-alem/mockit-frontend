@@ -10,7 +10,7 @@ function Question(props) {
   return (
     <>
       <ReactQuill
-        // modules={}
+        readOnly
         value={editorContent}
       />
     </>

@@ -5,13 +5,14 @@
 }
 
 .ql-editor {
-  height: 400px;
+  height: 700px !important;
+  background-color: white !important;
 }
 
 span.ql-formats {
   visibility: hidden !important;
 }
 
-.ql-toolbar.ql-snow{
-    background-color: #021E39 !important;
+.ql-toolbar.ql-snow {
+  background-color: #021e39 !important;
 }

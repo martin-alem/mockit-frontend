@@ -11,8 +11,10 @@ import PhoneHangup from "./../../components/icons/PhoneHangup";
 import Record from "./../../components/icons/Record";
 import VideoCam from "./../../components/icons/VideoCam";
 import VideoCamOff from "./../../components/icons/VideoCamOff";
+import Code from "./../../components/icons/Code";
 import CustomAlert from "./../../components/alert/Alert";
 import Alert from "@mui/material/Alert";
+import Question from "./../../components/question/Question";
 
 function Room(props) {
   const { roomId } = props.match.params;
@@ -28,6 +30,7 @@ function Room(props) {
   const [audioMuted, setAudioMuted] = React.useState(false);
   const [screenShared, setScreenShared] = React.useState(false);
   const [recording, setRecording] = React.useState(false);
+  const [editorOpened, setEditorOpened] = React.useState(false);
   const [connectionState, setConnectionState] = React.useState("");
 
   const [showAlert, setShowAlert] = React.useState({
@@ -217,7 +220,11 @@ function Room(props) {
    * @param {Event} event
    */
   const handleTrackEvent = event => {
-    remoteVideo.current.srcObject = event.streams[0];
+    try {
+      remoteVideo.current.srcObject = event.streams[0];
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleConnectionStateChangeEvent = () => {
@@ -407,7 +414,6 @@ function Room(props) {
         recordStream.current = stream;
         const sender = senders.current.find(s => s.track.kind === "video");
         await sender.replaceTrack(shareStream);
-        console.log(sender);
         setScreenShared(true);
         socket.current.emit("screen-shared");
         shareStream.onended = () => {
@@ -482,11 +488,30 @@ function Room(props) {
     setRecording(false);
   };
 
+  /**
+   * This functions is called when the editor button is clicked
+   */
+  const openEditor = () => {
+    localVideo.current.style.display = "none";
+    remoteVideo.current.style.display = "none";
+    setEditorOpened(true);
+  };
+
+  /**
+   * This function is called when the close editor button is clicked
+   */
+  const closeEditor = () => {
+    localVideo.current.style.display = "block";
+    remoteVideo.current.style.display = "block";
+    setEditorOpened(false);
+  };
+
   return (
     <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "black" }}>
       <Container maxWidth="xl" sx={{ width: "100%", height: "100vh", position: "relative" }}>
         <video id="clocalVideo" autoPlay ref={localVideo}></video>
         <video id="cremoteVideo" autoPlay ref={remoteVideo}></video>
+        {editorOpened ? <Question question="Coding question" /> : null}
         <Box
           sx={{
             "& > :not(style)": {
@@ -515,6 +540,12 @@ function Room(props) {
             <Record onClick={startScreenRecord} sx={{ fontSize: 50 }} color="secondary" />
           ) : (
             <Record onClick={stopScreenRecord} sx={{ fontSize: 50 }} color="error" />
+          )}
+
+          {!editorOpened ? (
+            <Code onClick={openEditor} sx={{ fontSize: 50 }} color="secondary" />
+          ) : (
+            <Code onClick={closeEditor} sx={{ fontSize: 50 }} color="error" />
           )}
         </Box>
         <Alert variant="filled" severity="info">
