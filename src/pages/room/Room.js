@@ -31,6 +31,7 @@ function Room(props) {
   const [screenShared, setScreenShared] = React.useState(false);
   const [recording, setRecording] = React.useState(false);
   const [editorOpened, setEditorOpened] = React.useState(false);
+  const [editorContent, setEditorContent] = React.useState("");
   const [connectionState, setConnectionState] = React.useState("");
 
   const [showAlert, setShowAlert] = React.useState({
@@ -55,6 +56,10 @@ function Room(props) {
            */
           props.history.push("/404");
         } else {
+          const data = await response.json();
+          const { question } = data.interview;
+          await getCodingQuestion(question);
+
           await openAndUseMediaDevices();
 
           socket.current = io(`${process.env.REACT_APP_DOMAIN_MAIN}`);
@@ -88,6 +93,30 @@ function Room(props) {
     handleAsync();
     // eslint-disable-next-line
   }, []);
+
+  /**
+   * Gets the question that was selected for the interview
+   * @param {String} questionID question id
+   */
+  const getCodingQuestion = async questionID => {
+    try {
+      const url = `${process.env.REACT_APP_DOMAIN_MAIN}/api/v1/question/${questionID}`;
+      const method = "GET";
+
+      const response = await httpAgent(url, method, {});
+      if (response.ok) {
+        const data = await response.json();
+        const { content } = data.question;
+        setEditorContent(content);
+      } else {
+        /**
+         * You may want to show them an error of stop the interview
+         */
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   /**
    * This function will asynchronously request for the user's media devices and render them to the local video element
@@ -511,7 +540,7 @@ function Room(props) {
       <Container maxWidth="xl" sx={{ width: "100%", height: "100vh", position: "relative" }}>
         <video id="clocalVideo" autoPlay ref={localVideo}></video>
         <video id="cremoteVideo" autoPlay ref={remoteVideo}></video>
-        {editorOpened ? <Question question="Coding question" /> : null}
+        {editorOpened ? <Question question={editorContent} /> : null}
         <Box
           sx={{
             "& > :not(style)": {

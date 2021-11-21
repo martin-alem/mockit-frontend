@@ -16,7 +16,6 @@ import ProfileForm from "./../../components/profile_form/ProfileForm";
 import Schedular from "./../../components/schedular/Schedular";
 import { UserContext } from "./../../context/userContext";
 import { httpAgent } from "./../../util/util";
-import Question from "./../../components/question/Question"
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -97,7 +96,6 @@ export default function MenuAppBar() {
               <Schedular />
             </TabPanel>
             <TabPanel value="4">
-              <Question question="Coding question"/>
             </TabPanel>
           </TabContext>
         </Box>
