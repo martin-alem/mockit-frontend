@@ -79,9 +79,9 @@ function WaitRoom(props) {
               <Typography variant="h6" sx={{ textAlign: "center", mb: "20px" }}>
                 Send this link to a friend
               </Typography>
-              <Typography variant="h6" sx={{ textAlign: "center", color: "secondary.main" }}>
+              <Link sx={{ textAlign: "center", color: "secondary.main", fontSize: "25px" }}>
                 {process.env.REACT_APP_DOMAIN}/mock-interview/lobby/{roomId}
-              </Typography>
+              </Link>
             </Container>
           </CardActions>
         </Card>
