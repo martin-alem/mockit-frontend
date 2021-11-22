@@ -293,7 +293,7 @@ function Room(props) {
           urls: "stun:stun.stunprotocol.org",
         },
         {
-          url: "turn:numb.viagenie.ca",
+          urls: "turn:numb.viagenie.ca",
           credential: "muazkh",
           username: "webrtc@live.com",
         },
