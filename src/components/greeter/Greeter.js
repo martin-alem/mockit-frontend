@@ -6,7 +6,7 @@ function Greeter({firstName}) {
   return (
     <Box sx={{ mt: { xs: "10px", md: "50px" }, textAlign: {sx: "center", md: "right"} }}>
       <Typography variant="h4" component="h4" color="primary.main">
-        Good Evening, {firstName}
+        Welcome, {firstName}
       </Typography>
     </Box>
   );
