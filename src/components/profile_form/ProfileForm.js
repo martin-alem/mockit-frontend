@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import SaveIcon from "@mui/icons-material/Save";
 import { UserContext } from "./../../context/userContext";
 import { httpAgent } from "./../../util/util";
+import CustomAlert from "./../../components/alert/Alert";
 
 function ProfileForm() {
   const userContext = React.useContext(UserContext);
@@ -118,6 +119,7 @@ function ProfileForm() {
             userContext.setLoggedInUser(prevState => {
               return { ...prevState, profile: data.profile };
             });
+            setShowAlert(showAlertOptions("changes successfully saved", "success"));
           })
           .catch(error => {
             console.error(error);
@@ -126,6 +128,28 @@ function ProfileForm() {
       .catch(error => {
         console.error(error);
       });
+  };
+
+  const [showAlert, setShowAlert] = React.useState({
+    vertical: "top",
+    horizontal: "center",
+    duration: 6000,
+    severity: "info",
+    message: "Custom message",
+    showAlert: false,
+    setShowAlert: null,
+  });
+
+  const showAlertOptions = (message, severity) => {
+    return {
+      vertical: "top",
+      horizontal: "center",
+      duration: 6000,
+      severity,
+      message,
+      showAlert: true,
+      setShowAlert: setShowAlert,
+    };
   };
   return (
     <Box>
@@ -255,6 +279,7 @@ function ProfileForm() {
       >
         Save Changes
       </Button>
+      <CustomAlert options={showAlert} />
     </Box>
   );
 }

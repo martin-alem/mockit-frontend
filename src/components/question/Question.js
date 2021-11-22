@@ -8,12 +8,12 @@ function Question(props) {
   const [editorContent] = React.useState(question);
 
   return (
-    <>
+    <div className="Question">
       <ReactQuill
         readOnly
         value={editorContent}
       />
-    </>
+    </div>
   );
 }
 

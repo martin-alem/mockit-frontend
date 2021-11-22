@@ -4,15 +4,15 @@
   box-sizing: border-box;
 }
 
-.ql-editor {
+.Question .ql-editor {
   height: 700px !important;
   background-color: white !important;
 }
 
-span.ql-formats {
+.Question span.ql-formats {
   visibility: hidden !important;
 }
 
-.ql-toolbar.ql-snow {
+.Question .ql-toolbar.ql-snow {
   background-color: #021e39 !important;
 }
