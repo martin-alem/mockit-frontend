@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 import HourGlass from "./../../components/icons/HourGlass";
 import { InterviewContext } from "./../../context/interviewContext";
 import { io } from "socket.io-client";
@@ -79,7 +80,10 @@ function WaitRoom(props) {
               <Typography variant="h6" sx={{ textAlign: "center", mb: "20px" }}>
                 Send this link to a friend
               </Typography>
-              <Link sx={{ textAlign: "center", color: "secondary.main", fontSize: "25px" }}>
+              <Link
+                href={`${process.env.REACT_APP_DOMAIN}/mock-interview/lobby/${roomId}`}
+                sx={{ textAlign: "center", color: "secondary.main", fontSize: "25px" }}
+              >
                 {process.env.REACT_APP_DOMAIN}/mock-interview/lobby/{roomId}
               </Link>
             </Container>
