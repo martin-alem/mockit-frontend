@@ -133,6 +133,7 @@ function Room(props) {
         },
       };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      localVideo.current.volume = 0;
       localVideo.current.srcObject = stream;
       localStream.current = stream;
     } catch (error) {
@@ -543,7 +544,7 @@ function Room(props) {
   return (
     <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "black" }}>
       <Container maxWidth="xl" sx={{ width: "100%", height: "100vh", position: "relative" }}>
-        <video id="clocalVideo" autoPlay ref={localVideo}></video>
+        <video id="clocalVideo" autoPlay ref={localVideo} muted></video>
         <video id="cremoteVideo" autoPlay ref={remoteVideo}></video>
         {editorOpened ? <Question question={editorContent} /> : null}
         <Box
