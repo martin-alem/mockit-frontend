@@ -28,14 +28,14 @@ Mockit is a web-based platform designed to enable developers on the journey of t
 
 # Screen Shots
 
-![home](https://trello.com/1/cards/619cece15279324bac4a889f/attachments/619cecf88431711c2afbf867/download/home.PNG)
-![Login](https://trello.com/1/cards/619cece15279324bac4a889f/attachments/619ced3765b2047619ec1522/download/login.PNG)
-![Profile](https://trello.com/1/cards/619cece15279324bac4a889f/attachments/619ced0ae9c6021b4159a93b/download/profile.PNG)
-![Schedular](https://trello.com/1/cards/619cece15279324bac4a889f/attachments/619ced18e746af0ca06831e3/download/schedular.PNG)
-![Wait Room](https://trello.com/1/cards/619cece15279324bac4a889f/attachments/619ced255c6cd42c77ee073a/download/lobby.PNG)
-![Lobby](https://trello.com/1/cards/619cece15279324bac4a889f/attachments/619ced4bb70d814312227aac/download/wait.PNG)
-![Interview room](https://trello.com/1/cards/619cece15279324bac4a889f/attachments/619ced63fff9ad33fd53ec2f/download/room.PNG)
-![Admin](https://trello.com/1/cards/619cece15279324bac4a889f/attachments/619ced7282f0e920b97af2a1/download/admin.PNG)
+![home](https://i.ibb.co/zQRXfRk/home.png)
+![Login](https://i.ibb.co/WWb0FCW/login.png)
+![Profile](https://i.ibb.co/68xpf8c/profile.png)
+![Schedular](https://i.ibb.co/1TyWYFF/schedular.png)
+![Wait Room](https://i.ibb.co/ykbtZD4/wait.png)
+![Lobby](https://i.ibb.co/FHQDdb8/lobby.png)
+![Interview room](https://i.ibb.co/xqnD2Nt/room.png)
+![Admin](https://i.ibb.co/PYyZqJR/admin.png)
 
 ## Getting Started
 
