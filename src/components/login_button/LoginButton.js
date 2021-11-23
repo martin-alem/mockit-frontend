@@ -44,7 +44,8 @@ function LoginButton() {
         .then(response => {
           response
             .json()
-            .then(data => {
+            .then( data =>
+            {
               userContext.setLoggedInUser({ user: { ...data.user }, profile: { ...data.profile } });
               window.location.replace("/profile");
             })

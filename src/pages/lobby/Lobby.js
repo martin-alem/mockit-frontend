@@ -68,7 +68,14 @@ function Lobby(props) {
 
   async function playLocalVideo() {
     try {
-      const constraints = { video: true, audio: true };
+      const constraints = {
+        video: true,
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100,
+        },
+      };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       localVideo.current.srcObject = stream;
       localVideo.current.play();
